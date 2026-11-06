@@ -5,30 +5,16 @@ const spinner = document.querySelector("#spinner");
 const historyUl = document.querySelector("#historyList");
 const forecastUl = document.querySelector("#forecastList");
 const weatherForeDiv = document.querySelector("#weatherForecast");
+const historyDiv = document.querySelector("#searchHistory");
 const lastCitys = JSON.parse(localStorage.getItem("cities")) || [];
 const cityLocal = JSON.parse(localStorage.getItem("city"));
 
-cityName.addEventListener("change", async (e) => {
-  const latlongData = await getLatLong(e.target.value);
-  if (latlongData) {
-    spinner.textContent = "";
-    spinner.style.color = "gray";
-    btnSearch.disabled = false;
-    btnSearch.style.opacity = 1;
-  } else {
-    spinner.textContent = "Enter valid City name";
-    spinner.style.color = "red";
-    btnSearch.disabled = true;
-    btnSearch.style.opacity = 0.5;
-  }
-});
 weatherForm.addEventListener("submit", (e) => {
   e.preventDefault();
   const typedCity = cityName.value.trim();
 
   if (typedCity) {
     getWeatherData(typedCity);
-    showForecast();
   }
 });
 async function getWeatherData(cityGet) {
@@ -37,7 +23,6 @@ async function getWeatherData(cityGet) {
   const cityObj = {};
   if (geoInfo) {
     const { latitude, longitude, country, name: city } = geoInfo;
-
     const weatherData = await getWeatherApi(latitude, longitude);
     if (weatherData) {
       cityObj.name = cityGet;
@@ -50,7 +35,6 @@ async function getWeatherData(cityGet) {
       cityWeatherObj.temperature = temperature;
       cityWeatherObj.windspeed = windspeed;
       lastCitys.push(cityWeatherObj);
-
       localStorage.setItem("cities", JSON.stringify(lastCitys.slice(-5).reverse()));
       showWeather();
     }
@@ -94,17 +78,16 @@ function showWeather() {
   const weatherDiv = document.querySelector("#weatherResult");
   weatherDiv.style.display = "none";
   weatherForeDiv.style.display = "none";
+  historyDiv.style.display = "none";
 
   let cities = JSON.parse(localStorage.getItem("cities")) || [];
   const cityObj = JSON.parse(localStorage.getItem("city"));
 
   if (cityObj) {
-  }
-  if (cityObj) {
     cityName.value = cityObj.name;
     weatherDiv.style.display = "block";
     weatherForeDiv.style.display = "block";
-    if (weatherDiv) {
+    if (weatherDiv && cities.length) {
       if (cities[0].temperature >= 30) {
         weatherDiv.style.backgroundColor = "red";
       }
@@ -118,28 +101,27 @@ function showWeather() {
     }
     showForecast();
   }
+  if (cities.length) {
+    historyDiv.style.display = "block";
+    cities.forEach((city) => {
+      const li = document.createElement("li");
 
-  cities.forEach((city, index) => {
-    li = document.createElement("li");
+      if (city.temperature >= 30) {
+        li.style.backgroundColor = "red";
+      }
+      if (city.temperature <= 20) {
+        li.style.backgroundColor = "blue";
+      }
 
-    // li.style.fontWeight = "bold";
-    if (city.temperature >= 30) {
-      li.style.backgroundColor = "red";
-    }
-    if (city.temperature <= 20) {
-      li.style.backgroundColor = "blue";
-    }
-
-    li.classList.add("p-3", "rounded-lg", "bg-cyan-400", "m-2", "font-bold", "text-white");
-    li.innerHTML = `<h4> <i class="fa fa-map-marker" aria-hidden="true"></i> ${city.country} | ${city.city}</h4>
+      li.classList.add("p-3", "rounded-lg", "bg-cyan-400", "m-2", "font-bold", "text-white");
+      li.innerHTML = `<h4> <i class="fa fa-map-marker" aria-hidden="true"></i> ${city.country} | ${city.city}</h4>
     <p><i class="fa-solid fa-temperature-high"></i> ${city.temperature} °C </p>
     <p> <i class="fa-solid fa-wind"></i> ${city.windspeed}</p>
     `;
-    historyUl.appendChild(li);
-  });
+      historyUl.appendChild(li);
+    });
+  }
 }
-
-showWeather();
 
 async function showForecastApi() {
   const cityObj = JSON.parse(localStorage.getItem("city"));
@@ -166,7 +148,6 @@ async function showForecastApi() {
 async function showForecast() {
   const forecastList = await showForecastApi();
   forecastUl.innerHTML = "";
-  // weatherForeDiv.style.display = "none";
 
   if (forecastList) {
     const forecasts = forecastList.time.map((date, index) => {
@@ -175,9 +156,9 @@ async function showForecast() {
         temperature: forecastList.temperature_2m_max[index],
       };
     });
-    // weatherForeDiv.style.display = "block";
+
     forecasts.forEach((item) => {
-      li = document.createElement("li");
+      const li = document.createElement("li");
       li.classList.add("flex", "items-center", "justify-between", "gap-4", "p-3", "rounded-lg", "bg-slate-400", "mb-2", "font-bold", "text-white");
       li.innerHTML = ` <p> <i class="fa-solid fa-clock"></i> ${item.date}</p>
     <p><i class="fa-solid fa-temperature-high"></i> ${item.temperature} °C </p>
@@ -187,3 +168,5 @@ async function showForecast() {
     });
   }
 }
+
+showWeather();
