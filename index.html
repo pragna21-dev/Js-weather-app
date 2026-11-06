@@ -12,20 +12,40 @@
       <h1 class="flex items-center justify-center my-2 py-4 font-bold text-lg">Wather App</h1>
     </header>
     <main>
-      <section class="min-h-screen flex items-center justify-center">
-        <div class="bg-white w-full p-8 rounded-lg max-w-3xl mx-1 shadow">
-          <h3 id="spinner" class="text-slate-500 text-sm"></h3>
-          <form id="weatherForm" class="text flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-5">
-            <input type="text" id="cityTxt" name="city" placeholder="Enter City" class="w-full border border-slate-300 focus:border-blue-500 outline-none rounded-lg p-2" />
-            <button type="submit" id="btnSearch" class="bg-sky-600 rounded-lg text-white px-5 w-28 p-2 font-semibold">Search</button>
-          </form>
-          <div class="flex items-center justify-center my-4">
-            <div id="weatherResult" class="bg-sky-600 shadow my-5 rounded-lg w-80 p-5 text-white font-semibold">
-              <h4 id="locaton"></h4>
-              <p id="weather"></p>
+      <section class="min-h-screen">
+        <div class="flex items-center justify-center my-4">
+          <div class="bg-white w-full p-8 rounded-lg max-w-3xl mx-1 shadow">
+            <h3 id="spinner" class="text-slate-500 text-sm"></h3>
+            <form id="weatherForm" class="text flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-5">
+              <input type="text" id="cityTxt" name="city" placeholder="Enter City" class="w-full border border-slate-300 focus:border-blue-500 outline-none rounded-lg p-2" />
+              <button type="submit" id="btnSearch" class="bg-sky-600 rounded-lg text-white px-5 w-28 p-2 font-semibold">Search</button>
+            </form>
+            <div class="flex items-center justify-center my-1">
+              <div id="weatherResult" class="bg-sky-600 shadow my-5 rounded-lg w-80 p-5 text-white font-semibold">
+                <h4 id="locaton"></h4>
+                <p id="weather"></p>
+              </div>
             </div>
           </div>
         </div>
+        <section>
+          <div class="flex items-center justify-center my-4">
+            <div class="bg-white w-full p-8 rounded-lg max-w-3xl mx-1 shadow" id="weatherForecast">
+              <h2 class="font-bold text-lg sm:text-xl mb-2">5-Day Weather Forecast</h2>
+              <ul id="forecastList" class="grid grid-cols-1 gap-1"></ul>
+            </div>
+          </div>
+        </section>
+        <section>
+          <div class="flex items-center justify-center my-4">
+            <div class="bg-white w-full p-8 rounded-lg max-w-3xl mx-1 shadow">
+              <div id="searchHistory">
+                <h2 class="font-bold text-lg sm:text-xl mb-2">Last Searches</h2>
+                <ul id="historyList" class="grid grid-cols-1 sm:grid-cols-2"></ul>
+              </div>
+            </div>
+          </div>
+        </section>
       </section>
     </main>
     <script src="script.js" defer></script>
